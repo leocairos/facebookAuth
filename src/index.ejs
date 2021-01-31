@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Login with Facebook</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+	<% if (!user.id) { %>
+
+		<h1>Welcome!</h1>
+		<p><a href="<%= url %>"><button type="button">Login with Facebook</button></a></p>
+
+		<% } else { %>
+			<h1>Hello, <%= user.given_name %>
+			</h1>
+
+			<div style="width: 90%; margin: auto ;">
+				<p><strong>Google Id:</strong>
+					<%= user.id %>
+				</p>
+				<p><strong>Full name:</strong>
+					<%= user.name %>
+				</p>
+				<p><strong>Email:</strong>
+					<%= user.email %> <span>[verified: <%= user.verified_email %>]</span>
+				</p>
+				<p><strong>URL Picture:</strong>
+					<%= user.picture %>
+				</p>
+
+				<p> <strong>Raw data:</strong>
+					<%= JSON.stringify(user) %>
+				</p>
+
+			</div>
+			<hr>
+			<p><a href="/logout"><button type="button">Logout</button></a></p>
+			<% } %>
+
+</body>
+
+</html>
