@@ -15,6 +15,7 @@ const {
 let auth = false;
 let code: string = '';
 let token: string = '';
+let userId: string = '';
 
 async function getAccessTokenFromCode(code: string) {
   const { data } = await axios({
@@ -41,6 +42,7 @@ async function getFacebookUserData(access_token: string) {
     },
   });
   //console.log(data); // { id, email, first_name, last_name }
+  userId = data.id;
   return data;
 };
 
@@ -48,9 +50,9 @@ const stringifiedParams = queryString.stringify({
   client_id: FACEBOOK_CLIENT_ID,
   redirect_uri: FACEBOOK_URL_REDIRECT,
   scope: ['email', 'public_profile'].join(','),
-  state: `{st=${FACEBOOK_STATE_ST},ds=${FACEBOOK_STATE_DS}}`,
+  //state: `{st=${FACEBOOK_STATE_ST},ds=${FACEBOOK_STATE_DS}}`,
   response_type: 'code',
-  //auth_type: 'request',
+  //auth_type: 'rerequest',
   //display: 'popup',
 });
 
@@ -82,8 +84,16 @@ async function facebookCallback(req: Request, res: Response, next: any) {
 }
 
 async function facebookLogout(req: Request, res: Response, next: any) {
-  //oauth2Client.revokeCredentials().then(r => console.log('revoke ', r));
-  // await oauth2Client.revokeCredentials();
+
+  const { data } = await axios({
+    url: `https://graph.facebook.com/${userId}/permissions`,
+    method: 'delete',
+    params: {
+      access_token: token,
+    },
+  });
+  console.log(data); // { id, email, first_name, last_name }  
+
   auth = false;
   code = '';
   token = '';
